@@ -1318,11 +1318,11 @@
     \begin{tabular}{l}
       % \ifcsname @author\endcsname \authorname \@author\\\fi
       \ifx\@author\empty\else\authorname\cnormal\@author\\ \fi
+      \ifcsname @bioinfo\endcsname \cnormal\@bioinfo\\ \fi
       \ifcsname @institute\endcsname \institutename \cnormal\@institute\\ \fi
       % \ifcsname @date\endcsname  \@date\\\fi
       \ifx\@date\empty\else\datename\cnormal\@date \\ \fi
       \ifcsname @version\endcsname \cnormal\versionname\@version\\ \fi
-      \ifcsname @bioinfo\endcsname \cnormal\@bioinfo\\ \fi
     \end{tabular}}
   \end{minipage}
   \begin{minipage}[c]{0.27\linewidth}
