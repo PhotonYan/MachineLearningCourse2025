@@ -18,10 +18,10 @@
   \item Dataset: $D=\{(x_i,y_i)\}_{i=1}^n$, where $x_i\in\mathbb{R}^d$ and $y_i\in\mathbb{R}$.  
   Here, $y_i$ denotes the regression target, while $x_i$ represents the input features used to predict $y_i$.
 
-  \item Linear Model: $f(x)=W^{\top}x+b$, with weight $W\in\mathbb{R}^d$ and bias $b\in\mathbb{R}$.  
+  \item Linear Model: $f(x)=w^{\top}x+b$, with weight $w\in\mathbb{R}^d$ and bias $b\in\mathbb{R}$.  
   \begin{note}
     This definition is equivalent to an inner product:  
-    $\hat y = W^{\top}x+b.$
+    $\hat y = w^{\top}x+b.$
   \end{note}
 
   \begin{definition}[Learnable / Trainable Parameters]
@@ -30,14 +30,14 @@
 \end{itemize}
 
 \textbf{Quiz.} How to determine whether a parameter is learnable?
-Quiz: How to determine $W$ and $b$?
+Quiz: How to determine $w$ and $b$?
 
 \noindent Ans: \textbf{ERM} (Empirical Risk Minimization)
 
 \begin{itemize}
   \item Loss function. Squared Loss (SE) is commonly used during optimization. The training objective can be written as:
     \begin{equation}
-        \argmin_{W,b}{\color{blue}{\frac{1}{n}}}\sum_{i\in[n]}\left(y_i-(W^\top x_i+b)\right)^2
+        \argmin_{w,b}{\color{blue}{\frac{1}{n}}}\sum_{i\in[n]}\left(y_i-(w^\top x_i+b)\right)^2
       \end{equation}
   
   The blue factor $1/n$ can be omitted in theoretical analysis, but is often kept in practice to stabilize the loss function during implementation.
@@ -46,22 +46,23 @@ Quiz: How to optimize the parameters?
 
 \noindent Ans: \textbf{Gradient Descent} (as a traditional ML method). In the case of linear regression:
 \begin{gather}
-  \frac{\partial \mathcal L}{\partial b}=-2\sum_{i\in[n]}(y_i-W^\top x_i-b)\\
-  \frac{\partial \mathcal L}{\partial W}=-2\sum_{i\in[n]}(y_i-W^\top x_i-b)x_i
+  \frac{\partial \mathcal L}{\partial b}=-2\sum_{i\in[n]}(y_i-w^\top x_i-b)\\
+  \frac{\partial \mathcal L}{\partial w}=-2\sum_{i\in[n]}(y_i-w^\top x_i-b)x_i
 \end{gather}
 \begin{note}
   In the field of machine learning, the gradient of a scalar with respect to a vector is itself a vector \textbf{(not a covector)}. This means:
   \begin{equation}
-    \frac{\partial \mathcal L}{\partial W}=\begin{pmatrix}
-      \frac{\partial \mathcal L}{\partial W_1}\\
-      \frac{\partial \mathcal L}{\partial W_2}\\
+    \frac{\partial \mathcal L}{\partial w}=\begin{pmatrix}
+      \frac{\partial \mathcal L}{\partial w_1}\\
+      \frac{\partial \mathcal L}{\partial w_2}\\
       \vdots\\
-      \frac{\partial \mathcal L}{\partial W_d}
-    \end{pmatrix}=\left(\frac{\partial \mathcal L}{\partial W_1},
-    \frac{\partial \mathcal L}{\partial W_2},
+      \frac{\partial \mathcal L}{\partial w_d}
+    \end{pmatrix}=\left(\frac{\partial \mathcal L}{\partial w_1},
+    \frac{\partial \mathcal L}{\partial w_2},
     \cdots,
-    \frac{\partial \mathcal L}{\partial W_d}\right)^\top
+    \frac{\partial \mathcal L}{\partial w_d}\right)^\top
   \end{equation}
+See the definition of matix derivatives (assuming no special structure in the matrix) in \href{https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}{Matrix Cookbook} Chapter 2.
 \end{note}
 \begin{note}
   Here are some commonly used derivative formulas:
@@ -80,7 +81,7 @@ We optimize the parameters by subtracting a scalar multiple of the gradient from
 \end{definition} 
 That is:
 \begin{equation}
-    W'=W-\alpha\frac{\partial\mathcal L}{\partial W },\quad b'=b-\alpha\frac{\partial \mathcal L}{\partial b}
+    w'=w-\alpha\frac{\partial\mathcal L}{\partial w },\quad b'=b-\alpha\frac{\partial \mathcal L}{\partial b}
 \end{equation}
 Optimization will stop when the norm of the parameter update becomes smaller than a given hyperparameter.
 \section{Closed-Form of Linear Regression}
@@ -89,12 +90,12 @@ Optimization will stop when the norm of the parameter update becomes smaller tha
 \end{proposition}
 Settings.
 \begin{itemize}
-  \item Metrix $X_0:=(x_1^\top,\cdots,x_n^{\top})^\top$ ; 
-  \item Metrix $X:=(X_0,\mathbb 1)\in \mathbb R^{n\times(d+1)}$;
+  \item Matrix $X_0:=(x_1,\cdots,x_n)^\top$ ; 
+  \item Matrix $X:=(X_0,\mathbb 1)\in \mathbb R^{n\times(d+1)}$;
   \item $y=(y_1,\cdots,y_n)^\top\in\mathbb R^n$;
-  \item $\hat w=(w,b)^\top\in\mathbb R^{d+1}$.
+  \item $\hat w=(w^\top,b)^\top\in\mathbb R^{d+1}$.
 \end{itemize}
-Then the loss function of $\hat w$ can be writtern as:
+Then the loss function of $\hat w$ can be written as:
 \begin{equation}
     \mathcal L(\hat w)=(y-X\hat w)^\top (y-X\hat w)=\|y-X\hat w\|_2^2
 \end{equation}
@@ -143,13 +144,14 @@ When $X^\top X$ isn't invertible:
   \item If $\rank (X^\top X, X^\top y)>\rank (X^\top X)$, $\hat w$ has no solution; 
   \item $\hat w$ has infinity solution o.w.
 \end{enumerate}
-Situation 1 is \textbf{Impossible} because both $X^\top X$ and $X^\top y$ can be represented in the column space of $X^\top$. Therefore, the optimization problem must have a solution, which may be either unique or infinite.
+Situation 1 is \textbf{impossible} because both $X^\top X$ and $X^\top y$ can be represented in the column space of $X^\top$. Therefore, the optimization problem must have a solution, which may be either unique or infinite.
 
 As an infinite set of solutions makes it difficult to determine which estimate of $\hat w$ to choose, we apply \textbf{$L_2$ regularization} to linear regression, which is commonly referred to as \textbf{Ridge Regression}. That is:
 \begin{equation}
-    \mathcal L_{L_2}:=\mathcal L(\hat w)+\boxed{\lambda\|\hat w\|_2^2}
+    \mathcal L_{L_2}:=\mathcal L(\hat w)+\boxed{\lambda\|\hat w\|_2^2},
 \end{equation}
-Noticed that $\|\hat w\|_2^2=\sum_{i=1}^{d+1}\hat w_i^2$, $L_2$ regularization prevents any single dimension from being assigned an excessively large weight, , and encourages the model to make use of more dimensions during training.
+where $\lambda>0$ is a hyperparameter.
+Notice that $\|\hat w\|_2^2=\sum_{i=1}^{d+1}\hat w_i^2$, $L_2$ regularization prevents any single dimension from being assigned an excessively large weight, and encourages the model to make use of more dimensions during training.
 \begin{figure}[H]
   \centering
   \includegraphics{../../tikz/1/2-2.pdf}
@@ -160,27 +162,27 @@ which take the form of concentric ellipses (circle in the plot). }
 
 During ridge regression, we minimize the $\mathcal L_{L_2}$:
 \begin{equation}
-    \argmin_{\hat w}\,(y-X\hat w)^\top(y-X\hat w)+\lambda\hat W^\top \hat W
+    \argmin_{\hat w}\,(y-X\hat w)^\top(y-X\hat w)+\lambda\hat w^\top \hat w
 \end{equation}
 The optimization stops when:
 \begin{align}
   \frac{\partial \mathcal L_{L_2}}{\partial \hat w}&=-2X^\top y+2X^\top X\hat w+2\lambda I\hat w=0\\
-  &\Rightarrow (X^\top X+\lambda\mathbb I)\hat w=X^\top w
+  &\Rightarrow (X^\top X+\lambda I)\hat w=X^\top y
 \end{align} 
 \begin{proposition}
-$X^\top X+\lambda\mathbb I$ always invertible.
+$X^\top X+\lambda I$ always invertible.
 \end{proposition}
 \begin{proof}
   Since $X^\top X$ is a real symmetric matrix, we have the eigen-decomposition
   $X^\top X=U\Lambda U^\top$, where $\Lambda=\mathrm{diag}(\lambda_1,\cdots,\lambda_{d+1})$.  
-  Moreover, as $X^\top X\succeq 0$ is positive semi-definite, it follows that $\forall i\in [d+1],\,\lambda_i\ge 0$.  
+  Moreover, as $X^\top X\succeq 0$ (positive semi-definite), it follows that $\forall i\in [d+1],\,\lambda_i\ge 0$.  
   Note that:
   \begin{equation}
-      \lambda\mathbb I=\lambda UU^\top
+      \lambda I=\lambda UU^\top
   \end{equation}
   since $U$ is an orthogonal matrix. Hence:
   \begin{equation}
-      X^\top X+\lambda\mathbb I=U(\Lambda+\lambda I)U^\top
+      X^\top X+\lambda I=U(\Lambda+\lambda I)U^\top
   \end{equation}
   For all $i\in[d+1]$, we have:
   \begin{equation}
@@ -212,7 +214,7 @@ Linear regression with $L_1$ regularization is called \textbf{Lasso Regression} 
 
 Ideally, we would like to solve $X \hat w = y.$ If $y$ lies on the hypersurface 
 \begin{equation}
-  \mathcal{M}(X) :=\mathrm{Span}(X)= \{ X w : w \in \mathbb{R}^d \} \subset \mathbb{R}^n
+	\mathcal{M}(X) :=\mathrm{Span}(X)= \{ X w : w \in \mathbb{R}^{d+1} \} \subset \mathbb{R}^n
 \end{equation}
 then the equation admits an exact solution. In most cases, however, $y \notin \mathcal{M}(X)$, so no exact solution exists. Nevertheless, we can always find an estimator $\hat w$ such that $\mathcal P_{\mathcal{M}(X)} y = X \hat w$, where $\mathcal P_{\mathcal{M}(X)}$ denotes the orthogonal projection onto the hypersurface $\mathcal{M}(X)$.
 \begin{proposition}
@@ -231,7 +233,7 @@ then the equation admits an exact solution. In most cases, however, $y \notin \m
   \includegraphics{../../tikz/1/3.pdf}
   \caption{Orthogonal projection interpretation of linear regression. 
 The predicted vector $X\hat w$ is obtained as the projection of $y$ onto the hypersurface 
-$\mathcal M(X)=\{Xw : w\in\mathbb{R}^d\}$, which is a linear subspace in the classical case.}
+$\mathcal M(X)=\{Xw : w\in\mathbb{R}^{d+1}\}$, which is a linear subspace in the classical case.}
 \end{figure}
 
 \end{document}
