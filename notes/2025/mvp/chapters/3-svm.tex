@@ -4,7 +4,7 @@
 \chapter{Support Vector Machine}
 \begin{introduction}
 \item Conditioned optimization
-\item Unstrict-Condition optimization
+\item Inequality optimization
 \item KKT condition
 \item Support Vector Machine
 \end{introduction}
@@ -22,18 +22,27 @@ When we deal with constrained optimization, we add an auxiliary constraint $h(x)
 \end{enumerate}
 
 \begin{note}
-    The second property can be understood by analogy with electrostatics: near a conductor, the electric field must be orthogonal to the surface. Otherwise, there would be a component of the field (gradient) along the constrained sub-hypersurface, violating equilibrium.
+    The second property can be understood by analogy with electrostatics: near a conductor, the electric field must be orthogonal to the surface. Otherwise, there would be a component of the field (gradient) along the constrained sub-hypersurface, violating equilibrium.  
+
+    Extending this analogy: in the electrostatic case, such a tangential component would induce currents along the conductor’s surface.  
+    In the optimization setting, a tangential component corresponds to a gradient lying along the constraint manifold, implying that the objective function can still be further optimized without violating the constraint.  
+
+    Moreover, the charge distribution problem in electrostatics can itself be interpreted as an energy minimization process: the charges rearrange to minimize the system’s electrostatic energy.  
+    In this sense, the equilibrium state of charges on a conductor can be seen as an optimization problem, which strengthens the analogy with constrained optimization in mathematics.
 \end{note}
-Combining the two conditions above, we obtain the \textbf{necessary} condition for a local minimum point:
+\vspace{0.5em}
+
+Combining the two conditions above, we obtain the \textbf{necessary} condition for a local minimum point, as shown in Figure \ref{3-lp}:
 \begin{equation}
-    \exists \,\lambda \quad \text{s.t.} \quad \nabla f(x^*) + \lambda \nabla h(x^*) = 0 .
+    \exists \,\lambda \quad \text{s.t.} \quad \nabla f(x^*) + \lambda \nabla h(x^*) = 0
 \end{equation}
 
-\begin{figure}[H]
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{../../fig/fig1.pdf}
     \caption{Illustration of the necessary condition for constrained local minima.}
-    \label{2-lr}
+    \label{3-lp}
 \end{figure}
 
 \begin{remark}
@@ -43,11 +52,11 @@ Combining the two conditions above, we obtain the \textbf{necessary} condition f
 
 Now we introduce the \emph{Lagrangian function}, which plays a central role in optimization theory:
 \begin{equation}
-    L(x, \lambda) := f(x) + \underbrace{\lambda}_{\text{Lagrange Multiplier}} h(x).
+    L(x, \lambda) := f(x) + \underbrace{\lambda}_{\text{Lagrange Multiplier}} h(x)
 \end{equation}
 Extending to the case of multiple constraints, the Lagrangian is defined as:
 \begin{equation}
-    L(x,\lambda) := f(x) + \sum_{i=1}^k \lambda_i h_i(x).
+    L(x,\lambda) := f(x) + \sum_{i=1}^k \lambda_i h_i(x)
 \end{equation}
 
 \begin{theorem}
@@ -69,15 +78,15 @@ Extending to the case of multiple constraints, the Lagrangian is defined as:
 \end{corollary}
 \begin{remark}
     In higher dimensions, the constrained submanifold may possess certain free variables that can be chosen arbitrarily while still satisfying the minimum condition. 
-    Specifically, if $\nabla f(x^*)$ cannot be expressed as a linear combination of $\nabla h_1(x^*)$ and $\nabla h_2(x^*)$, it is possible to continue optimizing along the intersection submanifold defined by $h_1=0$ and $h_2=0$.  
-    Therefore, it must be emphasized that the above equation provides only a \textbf{necessary condition}, not a sufficient one.
+    Specifically, if $\nabla f(x^*)$ cannot be expressed as a linear combination of $\nabla h_1(x^*)$ and $\nabla h_2(x^*)$, it is possible to continue optimizing along the intersection submanifold defined by $h_1=0$ and $h_2=0$, as shown in Figure \ref{3-1-2}.  
+    Therefore, it must be emphasized that the above equation provides only a \textbf{necessary condition}, not a sufficient one. 
 \end{remark}
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{../../fig/fig2.pdf}
     \caption{Illustration of optimization along the intersection of two constraint manifolds.}
-    \label{2-lr}
+    \label{3-1-2}
 \end{figure}
 
 \begin{example}
@@ -87,7 +96,7 @@ Extending to the case of multiple constraints, the Lagrangian is defined as:
     \end{equation}
     subject to the constraint
     \begin{equation}
-        (x_1 - 1)^2 + x_2^2 - 1 = 0.
+        (x_1 - 1)^2 + x_2^2 - 1 = 0
     \end{equation}
 \end{example}
 \begin{solution}
@@ -101,13 +110,11 @@ Extending to the case of multiple constraints, the Lagrangian is defined as:
 \begin{note}
     In convex settings, any local minimum is also a global minimum.
 \end{note}
-
+\vspace{0.5em}
 A new problem arises: what if we have an inequality constraint instead of a strict equality, i.e., $g(x) \leq 0$?
 
-\begin{remark}
-\section{Unstrict-Condition optimization}
+\section{Inequality optimization}
     We assume the feasible set of $x$ is compact; otherwise, the existence of a minimum may be problematic.
-\end{remark}
 
 By gradient analysis, we obtain:
 \begin{enumerate}
@@ -118,12 +125,12 @@ By gradient analysis, we obtain:
         \item If $x^*$ lies on the surface $g(x)=0$ (in other words, the constraint is \emph{active}), then $-\nabla f(x^*)$ must be aligned with $\nabla g(x^*)$.  
         Equivalently, $\exists \,\mu > 0$ such that 
         \[
-            \nabla f(x^*) + \mu \nabla g(x^*) = 0.
+            \nabla f(x^*) + \mu \nabla g(x^*) = 0
         \]
         \item If $x^*$ does not lie on the surface, i.e., $g(x)<0$ (the constraint is \emph{inactive}), we simply require $\nabla f(x^*)=0$.  
         In the unified form above, this corresponds to $\exists \,\mu=0$ such that 
         \[
-            \nabla f(x^*) + \mu \nabla g(x^*) = 0.
+            \nabla f(x^*) + \mu \nabla g(x^*) = 0
         \]
     \end{enumerate}
 \end{enumerate}
@@ -135,7 +142,7 @@ By gradient analysis, we obtain:
 \end{note}
 Again, we define the Lagrangian as
 \begin{equation}
-    L(x, \mu) = f(x) + \mu g(x),
+    L(x, \mu) = f(x) + \mu g(x)
 \end{equation}
 where $g(x)$ denotes the inequality constraint function.  
 Following the same steps as in the equality-constrained case, we obtain:
@@ -162,7 +169,7 @@ subject to equality constraints $h_i(x) = 0, \; i \in [k]$, and inequality const
 
 The corresponding Lagrangian is defined as
 \begin{equation}
-    L(x, \lambda, \mu) := f(x) + \sum_{i \in [k]} \lambda_i h_i(x) + \sum_{j \in [l]} \mu_j g_j(x).
+    L(x, \lambda, \mu) := f(x) + \sum_{i \in [k]} \lambda_i h_i(x) + \sum_{j \in [l]} \mu_j g_j(x)
 \end{equation}
 
 In this setting, a local minimum $x^*$ must satisfy a series of conditions known as the \textbf{Karush--Kuhn--Tucker (KKT) conditions}:
@@ -186,7 +193,7 @@ In most cases, the above conditions cannot be solved explicitly in closed form.
 \subsection{Hard Margin}
 Consider a linearly separable dataset $\{(x_i, y_i)\}$ with $y_i \in \{0,1\}$, and a linear model
 \begin{equation}
-    f(x) = w^\top x + b.
+    f(x) = w^\top x + b
 \end{equation}
 Although introducing a regularization term can make the solution unique by adjusting the hyperparameter $\lambda$, this does not resolve the issue of determining which solution $f(x;\lambda)$ is preferable among all possible choices, since $\lambda$ is itself arbitrary.
 
@@ -205,11 +212,11 @@ Here, the \emph{margin} refers to the distance from a point to the hyperplane, w
     Consider the hyperplane through the origin, given by $w^\top x = 0$.  
     Translating this plane until it passes through some point $x_0 \notin \{x \mid w^\top x = 0\}$, we obtain
     \[
-        w^\top (x - x_0) = 0.
+        w^\top (x - x_0) = 0
     \]
     Setting $-w^\top x_0 = b$, we recover the general hyperplane equation
     \[
-        w^\top x + b = 0.
+        w^\top x + b = 0
     \]
 \end{remark}
 
@@ -243,22 +250,17 @@ Geometrically, we obtain:
     \]
     so that
     \begin{align*}
-        w^\top x_0 + w^\top \Delta x \frac{w}{\|w\|} &= w^\top x, \\
-        -b + w^\top \Delta x \frac{w}{\|w\|} &= w^\top x, \\
-        \Delta x \|w\| &= w^\top x + b.
+        w^\top x_0 + w^\top \Delta x \frac{w}{\|w\|} &= w^\top x\\
+        -b + w^\top \Delta x \frac{w}{\|w\|} &= w^\top x\\
+        \Delta x \|w\| &= w^\top x + b
     \end{align*}
     This matches exactly the expression we obtained in \eqref{3.15}.
     
     \item From the Lagrangian perspective:
     \begin{align*}
-        \argmin_{x_0}\; \frac{1}{2}\|x - x_0\|^2 
-        &\quad\Rightarrow\quad 
-        L(x_0,\lambda) = \frac{1}{2}\|x - x_0\|^2 + \lambda (w^\top x_0 + b), \\
-        \text{s.t. } w^\top x_0 + b &= 0, \\
-        \nabla_{x_0} L(x_0, \lambda) = 0 
-        &\quad\Rightarrow\quad x_0 - x + \lambda w = 0, \\
-        \nabla_\lambda L(x_0, \lambda) = 0 
-        &\quad\Rightarrow\quad w^\top x_0 + b = 0.
+        \argmin_{x_0}\frac{1}{2}\|x-x_0\|^2\quad\Rightarrow\quad L(x_0,\lambda)&=\frac{1}{2}\|x-x_0\|^2+\lambda(w^\top x_0+b)\\
+        s.t.\; w^\top x_0+b\quad \quad\quad\nabla_{x_0}L(x_0,\lambda)&=0\quad\Rightarrow\quad x_0-x+\lambda w=0\\
+        \nabla_xL(x_0,\lambda)&=0\quad\Rightarrow \quad w^\top x_0+b=0
     \end{align*}
     This leads to the same solution as above.
 \end{enumerate}
@@ -275,19 +277,19 @@ If $\gamma_i > 0$, the point $x_i$ is correctly classified.
 
 Define the margin
 \begin{equation}
-    \gamma = \min_{i \in [n]} \gamma_i,
+    \gamma = \min_{i \in [n]} \gamma_i
 \end{equation}
 and the SVM optimization problem can be formalized as
 \begin{equation}
     \argmax_{w,b} \; {\color{red}{\gamma}}, 
-    \quad \text{s.t. } \forall i, \; \frac{y_i (w^\top x_i + b)}{\|w\|} \geq \gamma.
+    \quad \text{s.t. } \forall i, \; \frac{y_i (w^\top x_i + b)}{\|w\|} \geq \gamma
 \end{equation}
 
-This formulation seems problematic, since $\gamma$ is not independent of $(w,b)$.  
+This formulation seems problematic, since $\gamma$ is not independent.  
 To resolve this, suppose $(x_0, y_0)$ is a point achieving the minimum margin $\gamma_i$.  
 Then
 \begin{equation}
-    \gamma = \frac{y_0 (w^\top x_0 + b)}{\|w\|}.
+    \gamma = \frac{y_0 (w^\top x_0 + b)}{\|w\|}
 \end{equation}
 Thus, the SVM objective can be reformulated as
 \begin{equation}
@@ -303,16 +305,17 @@ We claim that we can make $y_0(w^\top x_0 + b)$ arbitrarily large without affect
 Thus, we may set $y_0(w^\top x_0 + b) = 1$.  
 Define the \emph{functional margin} as $y_i(w^\top x_i + b)$ and the \emph{geometric margin} as $y_i(w^\top x_i + b)/\|w\|$.  
 Since the functional margin alone has no intrinsic meaning, it is natural to rescale it by setting the norm of the support vector to unity.  
+\vspace{0.5em}
 
 This yields the primal form of the SVM optimization problem:
 \begin{equation}
     \argmax_{w,b} \frac{1}{\|w\|}, 
-    \quad \text{s.t. } y_i (w^\top x_i + b) \geq 1 \quad \forall i,
+    \quad \text{s.t. } y_i (w^\top x_i + b) \geq 1 \quad \forall i
 \end{equation}
 which is equivalent to
 \begin{equation}
     \argmin_{w,b} \frac{1}{2} \|w\|^2, 
-    \quad \text{s.t. } y_i (w^\top x_i + b) \geq 1 \quad \forall i.
+    \quad \text{s.t. } y_i (w^\top x_i + b) \geq 1 \quad \forall i
 \end{equation}
 
 In other words, the goal is to separate the dataset correctly while ensuring a sufficient margin, and simultaneously minimizing the norm of $w$.  
