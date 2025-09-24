@@ -1,0 +1,94 @@
+\documentclass[tikz,border=6pt]{standalone}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta}
+
+% ===== 可调参数 =====
+\def\slope{0.6}     % 直线斜率：y = slope*x + intercept
+\def\intercept{0.0} % 截距 b 对应 y 截距（控制超平面位置）
+\def\gap{1.0}       % “功能间隔”对应的代数位移（±1），几何宽度=2/||w||
+\def\xmin{-4.5}\def\xmax{4.5}
+\def\ymin{-3.5}\def\ymax{3.5}
+
+% ||w||，若写成 y = slope*x + intercept，则可取 w = (slope, -1)
+\pgfmathsetmacro{\wnorm}{sqrt(\slope*\slope + 1.0)}
+\pgfmathsetmacro{\halfwidth}{1.0/\wnorm} % 单侧几何宽度
+
+\begin{document}
+\begin{tikzpicture}[>=Stealth, line cap=round, line join=round,scale=0.8]
+  % 轴
+  
+  \draw[->,thin] (\xmin,0) -- (\xmax,0) node[below left] {$x_1$};
+  \draw[->,thin] (0,\ymin) -- (0,\ymax) node[below left] {$x_2$};
+  \node at (5.9,1.8) {$w^\top x+b=-1$};
+  \node at (5.7,2.7) {$w^\top x+b=0$};
+  \node at (5.4,3.6) {$w^\top x+b=1$};{
+  \clip (-4.3,-3.3)rectangle(4.3,3.3);
+
+  % 超平面与两条边界线
+  \draw[very thick] (\xmin,\slope*\xmin+\intercept) -- (\xmax,\slope*\xmax+\intercept);
+
+  \draw[dashed, thick] (\xmin,\slope*\xmin+\intercept+\gap) -- (\xmax,\slope*\xmax+\intercept+\gap)
+    node[anchor=west] {$w^\top x+b=+1$};
+  \draw[dashed, thick] (\xmin,\slope*\xmin+\intercept-\gap) -- (\xmax,\slope*\xmax+\intercept-\gap);
+
+  % 法向量 w（示意）
+  \draw[->,thick] (0,0) -- ({1.2*\slope},{-1.2}) node[below right] {$w$};
+
+  % 几何宽度标注（在中线选点 P，沿法向量正交画出 2/||w||）
+  \pgfmathsetmacro{\Px}{2.0}
+  \pgfmathsetmacro{\Py}{\slope*\Px+\intercept}
+  \pgfmathsetmacro{\ux}{\slope/\wnorm}  % 单位法向量分量
+  \pgfmathsetmacro{\uy}{-1.0/\wnorm}
+  \coordinate (A) at ({\Px - \ux*\halfwidth},{\Py - \uy*\halfwidth});
+  \coordinate (B) at ({\Px + \ux*\halfwidth},{\Py + \uy*\halfwidth});
+  \draw[<->] (A) -- (B) node[midway, xshift=3pt,fill=white,opacity=0.8] {$\frac{2}{\lVert w\rVert}$};
+
+  % ===== 样本点 =====
+  % +1 类（蓝色，满足 w^T x + b >= 0，粗略放置在线下方）
+  \begin{scope}[shift={(0,1.7)}]
+    \foreach \xx/\yy in {-3/-2.1, -2.3/-1.6, -1.6/1.0, -1/-0.8, -0.4/0.5,
+                       0.6/0.0, 1.1/0.2, 1.8/1.55, 2.6/1.0, 3.2/1.4} {
+    \fill[blue!70] (\xx,\yy) circle (2pt);
+  }
+  \end{scope}
+  
+  % 贴在上边界的支持向量（圈出来）
+  \foreach \xx in {-1.8, 0.7, 2.1} {
+    \pgfmathsetmacro{\yy}{\slope*\xx+\intercept+\gap}
+    \fill[blue!70] (\xx,\yy) circle (2pt);
+    \draw[blue!70, very thick] (\xx,\yy) circle (4pt);
+  }
+
+  % -1 类（红色，满足 w^T x + b <= 0，粗略放置在线上方）
+  \begin{scope}[shift={(0,-3.5)}]
+    \foreach \xx/\yy in {-3/0.4, -2.4/0.9, -1.5/1.2, -0.6/1.1, 0.2/1.2,
+                       1.0/1.6, 1.9/2.6, 2.8/2.3, 3.4/3.5} {
+    \fill[red!70] (\xx,\yy) circle (2pt);
+  }
+  \end{scope}
+  
+  % 贴在下边界的支持向量（圈出来）
+  \foreach \xx in {-2.2, -0.5, 1.6} {
+    \pgfmathsetmacro{\yy}{\slope*\xx+\intercept-\gap}
+    \fill[red!70] (\xx,\yy) circle (2pt);
+    \draw[red!70, very thick] (\xx,\yy) circle (4pt);
+  }
+
+  % 区域标注（可删）
+  \node[red!70!black] at (2,-1.2) {\small $y=+1$};
+  \node[blue!70!black]  at (-1.4,2.2) {\small $y=-1$};
+
+  % 说明（可删）
+%   \node[align=left, anchor=west] at (\xmin+0.1,\ymin+0.5) {\footnotesize
+%     \(\begin{aligned}
+%       &\text{Hyperplane: } w^\top x+b=0\\
+%       &\text{Margins: } w^\top x+b=\pm1\\
+%       &\text{Width: } \dfrac{2}{\|w\|}
+%     \end{aligned}\)
+%   };
+
+  % 裁剪边界
+  \path[use as bounding box] (\xmin,\ymin) rectangle (\xmax,\ymax);
+  }
+\end{tikzpicture}
+\end{document}

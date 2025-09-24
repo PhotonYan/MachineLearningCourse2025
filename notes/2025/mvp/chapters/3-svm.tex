@@ -236,7 +236,6 @@ Geometrically, we obtain:
 \begin{figure}[H]
     \centering
     \includegraphics{../../tikz/3/1.pdf}
-    \caption{Support Vector Machine.}
     \label{2-lr}
 \end{figure}
 
@@ -306,7 +305,12 @@ Thus, we may set $y_0(w^\top x_0 + b) = 1$.
 Define the \emph{functional margin} as $y_i(w^\top x_i + b)$ and the \emph{geometric margin} as $y_i(w^\top x_i + b)/\|w\|$.  
 Since the functional margin alone has no intrinsic meaning, it is natural to rescale it by setting the norm of the support vector to unity.  
 \vspace{0.5em}
-
+\begin{figure}[H]
+    \centering
+    \includegraphics{../../tikz/3/2.pdf}
+    \caption{Support Vector Machine.}
+    \label{2-lr}
+\end{figure}
 This yields the primal form of the SVM optimization problem:
 \begin{equation}
     \argmax_{w,b} \frac{1}{\|w\|}, 
