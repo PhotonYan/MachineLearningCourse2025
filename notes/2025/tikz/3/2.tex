@@ -21,8 +21,19 @@
   \draw[->,thin] (0,\ymin) -- (0,\ymax) node[below left] {$x_2$};
   \node at (5.9,1.8) {$w^\top x+b=-1$};
   \node at (5.7,2.7) {$w^\top x+b=0$};
-  \node at (5.4,3.6) {$w^\top x+b=1$};{
+  \node at (5.4,3.6) {$w^\top x+b=1$};
+  \begin{scope}
+    \clip (-3.8,-3.3)--(4.2,1.5)--(4.2,-3.3)--cycle;
+    \fill[color=red,opacity=0.2] (-4.3,-3.3)rectangle(4.3,3.3);
+  \end{scope}
+  \begin{scope}
+    \clip (3.8,3.3)--(-4.2,-1.5)--(-4.2,3.3)--cycle;
+    \fill[color=blue,opacity=0.2] (-4.3,-3.3)rectangle(4.3,3.3);
+  \end{scope}
+  
+  {
   \clip (-4.3,-3.3)rectangle(4.3,3.3);
+
 
   % 超平面与两条边界线
   \draw[very thick] (\xmin,\slope*\xmin+\intercept) -- (\xmax,\slope*\xmax+\intercept);
