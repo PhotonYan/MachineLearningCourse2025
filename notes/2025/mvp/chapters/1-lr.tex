@@ -19,8 +19,10 @@
   Here, $y_i$ denotes the regression target, while $x_i$ represents the input features used to predict $y_i$.
 
   \item Linear Model: $f(x)=w^{\top}x+b$, with weight $w\in\mathbb{R}^d$ and bias $b\in\mathbb{R}$.  
+  \item Linear Model: $f(x)=w^{\top}x+b$, with weight $w\in\mathbb{R}^d$ and bias $b\in\mathbb{R}$.  
   \begin{note}
     This definition is equivalent to an inner product:  
+    $\hat y = w^{\top}x+b.$
     $\hat y = w^{\top}x+b.$
   \end{note}
 
@@ -31,12 +33,14 @@
 
 \textbf{Quiz.} How to determine whether a parameter is learnable?
 Quiz: How to determine $w$ and $b$?
+Quiz: How to determine $w$ and $b$?
 
 \noindent Ans: \textbf{ERM} (Empirical Risk Minimization)
 
 \begin{itemize}
   \item Loss function. Squared Loss (SE) is commonly used during optimization. The training objective can be written as:
     \begin{equation}
+        \argmin_{w,b}{\color{blue}{\frac{1}{n}}}\sum_{i\in[n]}\left(y_i-(w^\top x_i+b)\right)^2
         \argmin_{w,b}{\color{blue}{\frac{1}{n}}}\sum_{i\in[n]}\left(y_i-(w^\top x_i+b)\right)^2
       \end{equation}
   
