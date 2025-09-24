@@ -1,0 +1,23 @@
+\documentclass[tikz, border=2mm]{standalone}
+\begin{document}
+\begin{tikzpicture}[scale=1.2, >=stealth]
+
+% 绘制直线 (超平面)
+\draw[thick] (-1.5,-0.7) -- (3,1.15) node[right] {$w^\top x+b=0$};
+
+% 向量 w (法向量)
+\draw[->, thick] (0.5,0.12) -- (0.05,1.2) node[above] {$w$};
+
+% 投影点 x0 在直线上
+\coordinate (x0) at (0.2,0);
+\fill (x0) circle (1.5pt) node[below right] {$x_0$};
+
+% 点 x 在直线外
+\coordinate (x) at (-0.42,1.5);
+\fill (x) circle (1.5pt) node[above] {$x$};
+
+% 投影连线 (虚线 Δx)
+\draw[dashed] (x) -- (x0) node[midway,left] {$\Delta x$};
+
+\end{tikzpicture}
+\end{document}
